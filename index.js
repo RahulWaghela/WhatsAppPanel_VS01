@@ -48,8 +48,8 @@ const uuid = require('uuid'); // Import the uuid library
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'rahulwaghela191919@gmail.com',
-    pass: 'ywfkswrvdawwxdoz',
+    user: process.env.MYEMAIL,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -112,7 +112,7 @@ app.post('/Register', async (req, res) => {
     console.log(verificationLink);
     // Send a verification email
     const mailOptions = {
-      from: 'rahulwaghela191919@gmail.com',
+      from: process.env.MYEMAIL,
       to: userEmail,
       subject: 'Email Verification',
       text: `Click the following link to verify your email: ${verificationLink}`,
