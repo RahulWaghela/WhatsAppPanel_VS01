@@ -36,8 +36,6 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 
 app.use('/static', express.static(path.join(__dirname, '/public')));
 app.use(cookieParser());
 app.use("", require('./routes/routes'))
-
-
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
@@ -48,8 +46,8 @@ const uuid = require('uuid'); // Import the uuid library
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.MYEMAIL,
-    pass: process.env.EMAIL_PASS,
+    user: 'rahulwaghela191919@gmail.com',
+    pass: 'koawdedgtswhbppm',
   },
 });
 
@@ -112,7 +110,7 @@ app.post('/Register', async (req, res) => {
     console.log(verificationLink);
     // Send a verification email
     const mailOptions = {
-      from: process.env.MYEMAIL,
+      from:'rahulwaghela191919@gmail.com',
       to: userEmail,
       subject: 'Email Verification',
       text: `Click the following link to verify your email: ${verificationLink}`,
