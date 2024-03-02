@@ -106,8 +106,8 @@ app.post('/Register', async (req, res) => {
     // saving all data inlcuding verification token 
     await empData.save();
     //i've create a verification link with the token
-    const verificationLink = `http://localhost:${port}/verify/${verificationToken}`;
-    // const verificationLink = `https://whatsapppanel-v0.onrender.com/verify/${verificationToken}`;
+    // const verificationLink = `http://localhost:${port}/verify/${verificationToken}`;
+    const verificationLink = `https://whatsapppanel-vs01.onrender.com/verify/${verificationToken}`;
 
     console.log(verificationLink);
     // Send a verification email
