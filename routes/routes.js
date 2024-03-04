@@ -1383,4 +1383,20 @@ router.get('/usersDetails/:userId', async (req, res) => {
   }
 });
 
+router.post('/addcontacts', async (req, res) => {
+  const { addcontacts, addName } = req.body;
+  const phoneNumbers = addcontacts.split(',').map(num => num.trim());
+  try {
+    const addNewContact = new NumberModel({
+      name: addName,
+      mobile: phoneNumbers.join(', '), // Join the phone numbers into a comma-separated string
+    });     
+    await addNewContact.save();
+    res.status(200).send('Phone numbers added successfully');
+  } catch (error) {
+    console.error('Error saving phone numbers:', error);
+    res.status(500).send('Error saving phone numbers');
+  }
+});
+
 module.exports = router;

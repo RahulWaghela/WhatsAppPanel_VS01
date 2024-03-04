@@ -1,5 +1,4 @@
 <%- include('partials/head.ejs') %>
-
   <body>
     <style>
       .selectcategoryForm{
@@ -7,24 +6,18 @@
         justify-content: space-between;
         width: 30%;
       }
-
-
-
       #categoryMNgBtn:hover {
                       color: white;
                     }
                     .ClassNoSix:hover{color: white;}
                     .ClassNoFour:hover{color: white;}
-
                     #changeModelContent {
                             width: 33%;
                           }
-
                           .deleteAndCancel {
                             display: flex;
                             justify-content: space-around;
                           }
-
                           .deleteAndCancel button {
                             background: linear-gradient(to right, #da8cff, #9a55ff);
                             outline: none;
@@ -33,12 +26,10 @@
                             border-radius: 5px;
                             width: 30%;
                           }
-
                           .deleteAndCancel button:focus {
                             border: 1px solid black;
                             box-shadow: 1px 0px 5px black;
                           }
-
                           /* Modal Styles */
                   .modal {
                     display: none;
@@ -50,7 +41,6 @@
                     height: 100%;
                     background-color: rgba(0, 0, 0, 0.4);
                   }
-
                   .modal-content {
                     background-color: #fff;
                     margin: 22% auto;
@@ -61,7 +51,6 @@
                     padding: 44px;
                     padding-top: 25px;
                   }
-
                   .close {
                     color: #aaa;
                     float: right;
@@ -69,31 +58,50 @@
                     font-weight: bold;
                     cursor: pointer;
                   }
-
                   .close:hover {
                     color: black;
                   }
-
                   /* animation of modal */
       /* .modal-open {
         animation: modal-open-animation 0.5s ease-in-out;
       }
-
       @keyframes modal-open-animation {
         from {
           opacity: 0;
           transform: translateY(-50px);
         }
-
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-
       #editModal {
         display: none;
       } */
+      #addcontacts{
+        padding: 6px;
+        border-radius: 4px;
+        border: none;
+        outline: none;
+      }
+      #contactsForm{
+         width: 61rem;
+      }
+      #contactBTN{
+        border: none;
+        padding: 5px;
+        background: #565252;
+        color: white;
+        border-radius: 5px;
+      }
+      #addName{
+        width: 130px;
+        margin-top: 3px;
+        padding: 6px;
+        border-radius: 4px;
+        border: none;
+        outline: none;
+      }
     </style>
 
     <div class="container-scroller">
@@ -108,10 +116,8 @@
                       <i class="mdi mdi-home"></i>
                       <!-- <img src="/static/assets/images/home-gradient.png" alt="" style="width: 35px;"> -->
                     </span> Contacts List
-
                   </h3>
                 </div>
-
                 <!-- add custom code here -->
                 <div class="uploadFile">
                   <form action="/uploadingFile" method="post" style="width: 73%; display: flex;"
@@ -128,17 +134,18 @@
                       <button type="submit" class="button-12" id="uploadContactsButtons" style="background-color: white; color: black;">Upload</button>
                       <p style="text-align: center; background: red;color: white;width: 60%;margin: auto;   border-radius: 3px;"
                         id="cetegoryErrorMsg"></p>
-
-
-
                     </div>
                   </form>
+                  <!-- test -->
+                  <form action="/addcontacts" method="post" id="contactsForm">
+                    <input type="text" name="addName" id="addName" placeholder="Add Name">
+                    <input type="text" name="addcontacts" id="addcontacts" placeholder="Add Contacts">
+                    <button type="submit" id="contactBTN">Add</button>
+                  </form>
+                  <!-- test -->
                   <a href="/category_management" id="categoryMNgBtn" class="button-12"
-                    style="text-decoration: none; height: 30px; margin-top: 10px; background-color: white; color: black;">category management</a>
-                  
+                    style="text-decoration: none; width: 33rem; height: 30px; margin-top: 3px; background-color: white; color: black;">category management</a>
                 </div>
-               
-               
                 <div class="row">
                   <!-- <div class="categoryErrorMessage" style="display: flex; justify-content: center;align-items: center;"> -->
                   <!-- </div> -->
@@ -147,26 +154,16 @@
                       <div class="card-body">
                         <div class="showTotalCount">
                           <h4 class="card-title">Total Contacts is <%=CountTotalNumbers%> <span>
-
                               </span> </h4>
-
                           <!-- <form id="searchForm" role="search"> -->
                           <input type="search" onkeyup="searchHere()" id="searchInput" name="q" placeholder="Search...."
                             aria-label="Search">
                           <!-- <button style="background-color :black;" type="submit">Search</button> -->
                           <!-- </form> -->
-
-
-
-
                         </div>
-
-
-
                         <p class="card-description"> You can <code>sort</code> the data by
                           clicking on the titles.
                         </p>
-
                         <table class="table" id="viewDataPage">
                           <thead>
                             <tr>
@@ -209,14 +206,9 @@
                               <% }); %>
                           </tbody>
                         </table>
-
-
-
                         <div class="buttonContainer">
-
                           <!-- <div class="categoryBtn"> -->
                             <!-- <button class="button-12" id="selectAllbox" onclick="selectAll()">Select All</button> -->
-
                             <form method="POST" class="selectcategoryForm" action="/updateCategories"
                               onsubmit="assignCategoryToSelected();return validateCheckboxSelection();">
                               <!-- <label for="category">Select a Category:</label> -->
@@ -230,10 +222,7 @@
                               </select>
                               <button type="submit" class="button-12">Add</button>
                             </form>
-
-
                           <!-- </div> -->
-
                           <!-- <div class="pagination-container"> -->
                             <% if (hasPrevPage) { %>
                               <a href="/contacts?page=<%= prevPage %>&sort=<%= sort %>" class="button-12 ClassNoFour"
@@ -244,10 +233,7 @@
                                     style="text-decoration: none;">Next</a>
                                   <% } %>
                           <!-- </div> -->
-
                         </div>
-                        
-
                         <!-- delete modal starts -->
                         <div id="deleteConfirmationModal" class="modal">
                           <div class="modal-content" id="changeModelContent">
@@ -297,7 +283,6 @@
             </div>
         </div>
     </div>
-
     <div id="editModal" class="modal">
       <div class="modal-content"> <!--onclick="hideModelNow()"-->
         <span class="close" id="closeModal" onclick="hideAndSeek();">×</span>
