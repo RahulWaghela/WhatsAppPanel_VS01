@@ -4,7 +4,7 @@ const path = require('path')
 require('dotenv').config();
 const port = process.env.PORT || 9878;
 const cookieParser = require('cookie-parser');
-const axios=require('axios');
+const axios = require('axios');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -110,7 +110,7 @@ app.post('/Register', async (req, res) => {
     console.log(verificationLink);
     // Send a verification email
     const mailOptions = {
-      from:'rahulwaghela191919@gmail.com',
+      from: 'rahulwaghela191919@gmail.com',
       to: userEmail,
       subject: 'Email Verification',
       text: `Click the following link to verify your email: ${verificationLink}`,
@@ -150,7 +150,7 @@ app.post('/', async (req, res) => {
     if (!userEmail || !userpassword) {
       const loginErrors = ['Please provide username and password'];
       return res.render('login', { loginErrors });
-    } 
+    }
     const getUserEmail = await alluserOfourPanel.findOne({ userEmail: userEmail });
     if (getUserEmail === null) { // Check explicitly for null
       // Handle the case where the user with the provided email is not found
@@ -158,7 +158,7 @@ app.post('/', async (req, res) => {
       return res.render('login', { loginErrors });
     }
 
-  //  now check the status here
+    //  now check the status here
     if (!getUserEmail.isActive) {
       const loginErrors = ['Your account is deactivated. Please contact the admin.'];
       return res.render('login', { loginErrors });
@@ -228,8 +228,8 @@ app.post('/saveCustomDb', async (req, res) => {
 });
 // forgot password functionality start.................................
 app.get('/forgotPassword', (req, res) => {
-    res.render('forgotPassword');
-  });
+  res.render('forgotPassword');
+});
 
 app.post('/forgot-password', async (req, res) => {
   try {
@@ -245,7 +245,7 @@ app.post('/forgot-password', async (req, res) => {
     // Generate a unique reset token using uuid
     let resetToken = uuid.v4();
     // Set an expiration time for the reset token (e.g., 1 hour)
-     resetToken = Date.now() + 3600000; // 1 hour in milliseconds
+    resetToken = Date.now() + 3600000; // 1 hour in milliseconds
 
     // Update the user's document in the database with the reset token and expiration time
     await alluserOfourPanel.updateOne(
@@ -255,7 +255,7 @@ app.post('/forgot-password', async (req, res) => {
       }
     )
     // Create a reset password link with the reset token
-    
+
     const resetLink = `http://localhost:${port}/reset-password?resetToken=${resetToken}`;
     // Send an email with the reset password link
     const mailOptions = {
@@ -335,12 +335,12 @@ app.get('/reset-password', async (req, res) => {
 //   }
 // });
 app.post('/reset-password', async (req, res) => {
-  try {   
+  try {
     const resetToken = req.body.resetToken;
     // const resetToken = req.query.resetToken;
     console.log(`this resetToken using req.body :  >> ${resetToken}`);;
     const newPassword = req.body.newPassword; // Assuming you receive the new password in the request body
-         
+
     const userDetail = await alluserOfourPanel.findOne({ resetToken });
     // const allUSer = await alluserOfourPanel.find({});
     // console.log(allUSer);
@@ -369,114 +369,114 @@ app.post('/reset-password', async (req, res) => {
 
 
 // CHATE HERE SECTION
-app.post('/getMsg',async (req, res) => {
-    try {
-      const phoneNo = 9157808228; // Replace with your phone number
-      const ctMsg = req.body.getTheData; // Replace with your custom message
-        const data = {
-          messaging_product: 'whatsapp',
-          recipient_type: 'individual',
-          to: `+91${phoneNo}`,
-          type: 'text',
-          text: {
-            body: `${ctMsg}`,
-          },
-        };
-        const response = await axios.post(
-          `${process.env.WHATSAAP_API}`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.WHATSAAP_TOKEN}`, // Replace with your access token
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (response.status === 200) {
-          console.log(`Message sent successfully to ${phoneNo}`);
-        } else {
-          console.log(`Cannot send message to ${phoneNo}. Status: ${response.status}`);
-        }
-        const savemessages = new ChattingMsg({
-          gettingMsg: ctMsg
-        });
-        await savemessages.save();
-        // ,{showourMessage}
-        // const showourMessage = await ChattingMsg.find({}, 'gettingMsg');
-        res.redirect('chating');
-    } catch (error) {
-      console.log(error);
-      res.send("Internal Server Error");
+app.post('/getMsg', async (req, res) => {
+  try {
+    const phoneNo = 9157808228; // Replace with your phone number
+    const ctMsg = req.body.getTheData; // Replace with your custom message
+    const data = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: `+91${phoneNo}`,
+      type: 'text',
+      text: {
+        body: `${ctMsg}`,
+      },
+    };
+    const response = await axios.post(
+      `${process.env.WHATSAAP_API}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAAP_TOKEN}`, // Replace with your access token
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log(`Message sent successfully to ${phoneNo}`);
+    } else {
+      console.log(`Cannot send message to ${phoneNo}. Status: ${response.status}`);
     }
-  });
-
-  // server.js
-  app.post('/uploadingFile', upload.single('file'), async (req, res) => {
-    try {
-      // if (!req.file) {
-      //     return res.status(400).send({ error: '*No file uploaded' });
-      // }
- 
-      const filePath = req.file.path; // check the file path
-      const fileType = req.file.mimetype;//check the file type
-      let jsonArray; //create a array
-
-      //check file type is CSV or XLSX
-      if (fileType === 'text/csv') {
-
-          jsonArray = await csvtojson({ //use csvtojson libruary for change all csv data in json format
-              noheader: false,
-              headers: ['name', 'mobile'],
-          }).fromFile(filePath);
-      } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-          // XLSX file: Read and parse using xlsx library
-          const workbook = xlsx.readFile(filePath);
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-          jsonArray = xlsx.utils.sheet_to_json(sheet);
-      } else {
-          // Unsupported file type
-          return res.status(400).send({ error: '*Unsupported file type' });
-      }
-      // Check if the first row contains the" name" and" mobile" headers
-      const firstRow = jsonArray[0];
-      if (!firstRow || !firstRow.name || !firstRow.mobile) {
-          return res.status(400).send({ error: '*Invalid or missing headers' });
-      }
-      // check that the file contains only two columns (name and mobile)
-      if (Object.keys(firstRow).length !== 2) {
-          return res.status(400).send({ error: '*File must contain exactly two columns: name and mobile' });
-      }
-
-      // Save the CSV and XLSX data to MongoDB using Employee collection
-      await NumberModel.insertMany(jsonArray);
-
-      // res.status(200).json({ message: 'File data saved successfully' });
-      //render the viewData page
-      
-      res.status(200).redirect("/contacts");
+    const savemessages = new ChattingMsg({
+      gettingMsg: ctMsg
+    });
+    await savemessages.save();
+    // ,{showourMessage}
+    // const showourMessage = await ChattingMsg.find({}, 'gettingMsg');
+    res.redirect('chating');
   } catch (error) {
-      console.error('Error saving File data:', error);
-      res.status(500).json({ error: 'Error saving File data', details: error.message });
+    console.log(error);
+    res.send("Internal Server Error");
   }
-  });
+});
 
+// server.js
+app.post('/uploadingFile', upload.single('file'), async (req, res) => {
+  try {
+    // if (!req.file) {
+    //     return res.status(400).send({ error: '*No file uploaded' });
+    // }
 
-  // post request for category management
-  app.post('/categoryNameSaveIntoDb', async (req, res) => {
-    try {
-      const categoryNameInput = req.body.categoryName;
-  
-      const saveCategoriesInDb = new categoryManage({
-        categoryName: categoryNameInput.trim() // Remove leading/trailing spaces
-      });
-  
-      await saveCategoriesInDb.save();
-      res.redirect('category_management');
-    } catch (error) {
-      console.log(error);
+    const filePath = req.file.path; // check the file path
+    const fileType = req.file.mimetype;//check the file type
+    let jsonArray; //create a array
+
+    //check file type is CSV or XLSX
+    if (fileType === 'text/csv') {
+
+      jsonArray = await csvtojson({ //use csvtojson libruary for change all csv data in json format
+        noheader: false,
+        headers: ['name', 'mobile'],
+      }).fromFile(filePath);
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      // XLSX file: Read and parse using xlsx library
+      const workbook = xlsx.readFile(filePath);
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      jsonArray = xlsx.utils.sheet_to_json(sheet);
+    } else {
+      // Unsupported file type
+      return res.status(400).send({ error: '*Unsupported file type' });
     }
-  });
+    // Check if the first row contains the" name" and" mobile" headers
+    const firstRow = jsonArray[0];
+    if (!firstRow || !firstRow.name || !firstRow.mobile) {
+      return res.status(400).send({ error: '*Invalid or missing headers' });
+    }
+    // check that the file contains only two columns (name and mobile)
+    if (Object.keys(firstRow).length !== 2) {
+      return res.status(400).send({ error: '*File must contain exactly two columns: name and mobile' });
+    }
+
+    // Save the CSV and XLSX data to MongoDB using Employee collection
+    await NumberModel.insertMany(jsonArray);
+
+    // res.status(200).json({ message: 'File data saved successfully' });
+    //render the viewData page
+
+    res.status(200).redirect("/contacts");
+  } catch (error) {
+    console.error('Error saving File data:', error);
+    res.status(500).json({ error: 'Error saving File data', details: error.message });
+  }
+});
+
+
+// post request for category management
+app.post('/categoryNameSaveIntoDb', async (req, res) => {
+  try {
+    const categoryNameInput = req.body.categoryName;
+
+    const saveCategoriesInDb = new categoryManage({
+      categoryName: categoryNameInput.trim() // Remove leading/trailing spaces
+    });
+
+    await saveCategoriesInDb.save();
+    res.redirect('category_management');
+  } catch (error) {
+    console.log(error);
+  }
+});
 app.listen(port, () => {
   console.log(`Server Running at http://localhost:${port}`);
 })
