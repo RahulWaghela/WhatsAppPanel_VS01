@@ -70,152 +70,152 @@ router.get("/templateMessage", auth, async (req, res) => {
 });
 
 // template message 
-// router.post('/sendtemplateMessages', upload.single('extractExcel'), auth, async (req, res) => {
-//   const { sameBtn } = req.body; // Assuming you're using body-parser middleware
+router.post('/sendtemplateMessages', upload.single('extractExcel'), auth, async (req, res) => {
+  const { sameBtn } = req.body; // Assuming you're using body-parser middleware
   
-//   if (sameBtn === 'multipleNumbers') {
-//     const phoneNumbers = req.body.phoneOfTemp;
-//     const messageContent = req.body.selectTemp;
-//     const allPhoneNumbers = phoneNumbers.split(',');
-//     for (const phoneNumber of allPhoneNumbers) {
-//       try {
-//         const response = await axios.post(
-//           'https://graph.facebook.com/v17.0/116168451372633/messages',
-//           {
-//             messaging_product: "whatsapp",
-//             to: phoneNumber.trim(), // Remove any leading/trailing whitespace
-//             type: "template",
-//             template: {
-//               name: messageContent,
-//               language: {
-//                 code: "en_US",
-//               },
-//             },
-//           },
-//           {
-//             headers: {
-//               Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
+  if (sameBtn === 'multipleNumbers') {
+    const phoneNumbers = req.body.phoneOfTemp;
+    const messageContent = req.body.selectTemp;
+    const allPhoneNumbers = phoneNumbers.split(',');
+    for (const phoneNumber of allPhoneNumbers) {
+      try {
+        const response = await axios.post(
+          'https://graph.facebook.com/v17.0/116168451372633/messages',
+          {
+            messaging_product: "whatsapp",
+            to: phoneNumber.trim(), // Remove any leading/trailing whitespace
+            type: "template",
+            template: {
+              name: messageContent,
+              language: {
+                code: "en_US",
+              },
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-//         const savingTemplateMessageInDB = new templateMsg({
-//           phoneOfTemp: phoneNumbers,
-//           selectTemp: messageContent
-//         })
-//         await savingTemplateMessageInDB.save();
-//         console.log(`Message sent to ${phoneNumber}`);
-//         console.log(`See here phone numbers ${phoneNumbers}`)
-//         console.log(`See here selected template name ${messageContent}`)
-//       } catch (error) {
-//         // console.error(`Error sending message to ${phoneNumber}:`, error.response?.status, error.response?.data);
-//         console.log(`See here phone numbers ${phoneNumbers}`)
-//         console.log(`See here selected template name ${messageContent}`);
-//         console.log(`See here Error ${error}`);
-//       }
-//     }
-//     console.log('Mobile Number is checked');
-//   }
-//   else if (sameBtn === 'bulkUploadInput') {
-//     const messageContent = req.body.selectTemp;
-//     const excelFile = req.file;
-//     if (excelFile) {
-//       try {
-//         // Process the Excel file using exceljs
-//         const workbook = new ExcelJS.Workbook();
-//         const worksheet = await workbook.xlsx.load(excelFile.buffer);
-//         const firstSheet = worksheet.getWorksheet(1);
-//         const jsonData = [];
-//         firstSheet.eachRow((row, rowNumber) => {
-//           if (rowNumber > 1) { // Skip header row
-//             const name = row.getCell(1).value;
-//             const mobile = row.getCell(2).value;
-//             jsonData.push({ name, mobile });
-//           }
-//         });
-//         console.log('Received Excel file:', excelFile.originalname);
-//         console.log('Excel File Data:');
-//         console.log(jsonData);
-//         for (const entry of jsonData) {
-//           const number = entry.mobile;
-//           try {
-//             const response = await axios.post(
-//               'https://graph.facebook.com/v17.0/116168451372633/messages',
-//               {
-//                 messaging_product: "whatsapp",
-//                 to: number,
-//                 type: "template",
-//                 template: {
-//                   name: messageContent,
-//                   language: {
-//                     code: "en_US",
-//                   },
-//                 },
-//               },
-//               {
-//                 headers: {
-//                   Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
-//                   "Content-Type": "application/json",
-//                 },
-//               }
-//             );
-//             console.log(`Message sent to ${number}`);
-//             console.log(`${numbers} see here ${error} mobile numbers ${messageContent}`)
-//           } catch (error) {
-//             console.error(`Error sending message to ${number}: ${messageContent} ${error.message}`);
-//           }
-//         }
-//       } catch (error) {
-//         console.error('Error processing Excel file:', error);
-//       }
-//     }
-//     // Handle bulk upload saving logic here
-//   } // save message with select category contacts
-//   else if (sameBtn === 'selectedCategoryInput') {
-//     const messageContent = req.body.selectTemp;
-//     const showInSelectBox = await NumberModel.find({});
-//     const selectedCategory = req.body.category;
-//     console.log('Selected Category:', selectedCategory);
-//     const mobileNumbersOfSelectedCategory = showInSelectBox
-//       .filter(item => item.categories === selectedCategory)
-//       .map(item => item.mobile);
-//     console.log('Selected Category:', selectedCategory);
-//     console.log('Mobile Numbers of Selected Category:', mobileNumbersOfSelectedCategory);
-//     for (const phoneNumber of mobileNumbersOfSelectedCategory) {
-//       try {
-//         const response = await axios.post(
-//           'https://graph.facebook.com/v17.0/116168451372633/messages',
-//           {
-//             messaging_product: "whatsapp",
-//             to: phoneNumber, // Remove any leading/trailing whitespace
-//             type: "template",
-//             template: {
-//               name: messageContent,
-//               language: {
-//                 code: "en_US",
-//               },
-//             },
-//           },
-//           {
-//             headers: {
-//               Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
-//         console.log(`Message sent to ${phoneNumber} messageContent : ${messageContent}`);
-//       } catch (error) {
-//         console.error(`Error sending message to ${phoneNumber}: ${messageContent} ${error.message}`);
-//       }
-//     }
-//     console.log('Select Category is checked');
-//     // Handle select category logic here
-//   } else {
-//     console.log('No radio button is checked');
-//   }
-//   res.send('message has been sent successfully!');
-// });
+        const savingTemplateMessageInDB = new templateMsg({
+          phoneOfTemp: phoneNumbers,
+          selectTemp: messageContent
+        })
+        await savingTemplateMessageInDB.save();
+        console.log(`Message sent to ${phoneNumber}`);
+        console.log(`See here phone numbers ${phoneNumbers}`)
+        console.log(`See here selected template name ${messageContent}`)
+      } catch (error) {
+        // console.error(`Error sending message to ${phoneNumber}:`, error.response?.status, error.response?.data);
+        console.log(`See here phone numbers ${phoneNumbers}`)
+        console.log(`See here selected template name ${messageContent}`);
+        console.log(`See here Error ${error}`);
+      }
+    }
+    console.log('Mobile Number is checked');
+  }
+  else if (sameBtn === 'bulkUploadInput') {
+    const messageContent = req.body.selectTemp;
+    const excelFile = req.file;
+    if (excelFile) {
+      try {
+        // Process the Excel file using exceljs
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = await workbook.xlsx.load(excelFile.buffer);
+        const firstSheet = worksheet.getWorksheet(1);
+        const jsonData = [];
+        firstSheet.eachRow((row, rowNumber) => {
+          if (rowNumber > 1) { // Skip header row
+            const name = row.getCell(1).value;
+            const mobile = row.getCell(2).value;
+            jsonData.push({ name, mobile });
+          }
+        });
+        console.log('Received Excel file:', excelFile.originalname);
+        console.log('Excel File Data:');
+        console.log(jsonData);
+        for (const entry of jsonData) {
+          const number = entry.mobile;
+          try {
+            const response = await axios.post(
+              'https://graph.facebook.com/v17.0/116168451372633/messages',
+              {
+                messaging_product: "whatsapp",
+                to: number,
+                type: "template",
+                template: {
+                  name: messageContent,
+                  language: {
+                    code: "en_US",
+                  },
+                },
+              },
+              {
+                headers: {
+                  Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            console.log(`Message sent to ${number}`);
+            console.log(`${numbers} see here ${error} mobile numbers ${messageContent}`)
+          } catch (error) {
+            console.error(`Error sending message to ${number}: ${messageContent} ${error.message}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error processing Excel file:', error);
+      }
+    }
+    // Handle bulk upload saving logic here
+  } // save message with select category contacts
+  else if (sameBtn === 'selectedCategoryInput') {
+    const messageContent = req.body.selectTemp;
+    const showInSelectBox = await NumberModel.find({});
+    const selectedCategory = req.body.category;
+    console.log('Selected Category:', selectedCategory);
+    const mobileNumbersOfSelectedCategory = showInSelectBox
+      .filter(item => item.categories === selectedCategory)
+      .map(item => item.mobile);
+    console.log('Selected Category:', selectedCategory);
+    console.log('Mobile Numbers of Selected Category:', mobileNumbersOfSelectedCategory);
+    for (const phoneNumber of mobileNumbersOfSelectedCategory) {
+      try {
+        const response = await axios.post(
+          'https://graph.facebook.com/v17.0/116168451372633/messages',
+          {
+            messaging_product: "whatsapp",
+            to: phoneNumber, // Remove any leading/trailing whitespace
+            type: "template",
+            template: {
+              name: messageContent,
+              language: {
+                code: "en_US",
+              },
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(`Message sent to ${phoneNumber} messageContent : ${messageContent}`);
+      } catch (error) {
+        console.error(`Error sending message to ${phoneNumber}: ${messageContent} ${error.message}`);
+      }
+    }
+    console.log('Select Category is checked');
+    // Handle select category logic here
+  } else {
+    console.log('No radio button is checked');
+  }
+  res.send('message has been sent successfully!');
+});
 
 router.get("/getMobileNumbers", auth, async (req, res) => {
   try {
