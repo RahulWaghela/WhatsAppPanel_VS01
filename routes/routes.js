@@ -228,162 +228,162 @@ router.get("/getMobileNumbers", auth, async (req, res) => {
   }
 });
 
-// router.get("/templateMsgHistory", auth, async (req, res) => {
-//   const ITEMS_PER_PAGE = 5; // Number of items to display per page
-//   try {
-//     const totalDataInDb = await templateMsg.find({}).count();
+router.get("/templateMsgHistory", auth, async (req, res) => {
+  const ITEMS_PER_PAGE = 5; // Number of items to display per page
+  try {
+    const totalDataInDb = await templateMsg.find({}).count();
 
-//     const page = req.query.page || 1; // Get the requested page from the query string
-//     const skip = (page - 1) * ITEMS_PER_PAGE; // Calculate the number of documents to skip
+    const page = req.query.page || 1; // Get the requested page from the query string
+    const skip = (page - 1) * ITEMS_PER_PAGE; // Calculate the number of documents to skip
 
-//     const sortField = req.query.sortField || "index"; // Get the sorting field (default: 'index')
-//     const sortOrder = req.query.sortOrder || "asc"; // Get the sorting order (default: 'asc')
+    const sortField = req.query.sortField || "index"; // Get the sorting field (default: 'index')
+    const sortOrder = req.query.sortOrder || "asc"; // Get the sorting order (default: 'asc')
 
-//     const sortQuery = {};
-//     sortQuery[sortField] = sortOrder === "asc" ? 1 : -1;
+    const sortQuery = {};
+    sortQuery[sortField] = sortOrder === "asc" ? 1 : -1;
 
-//     const totalCount = await templateMsg.count({});
-//     const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+    const totalCount = await templateMsg.count({});
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
-//     const allTemDetails = await templateMsg
-//       .find({})
-//       .skip(skip)
-//       .limit(ITEMS_PER_PAGE)
-//       .sort(sortQuery);
-//     // Modify the date format to remove the timezone part
+    const allTemDetails = await templateMsg
+      .find({})
+      .skip(skip)
+      .limit(ITEMS_PER_PAGE)
+      .sort(sortQuery);
+    // Modify the date format to remove the timezone part
 
-//     allTemDetails.forEach((item) => {
-//       if (item.date) {
-//         const dateWithoutTimeZone = new Date(item.date).toLocaleString(
-//           "en-US",
-//           { timeZone: "Asia/Kolkata" }
-//         );
-//         item.date = dateWithoutTimeZone;
-//       }
-//     });
+    allTemDetails.forEach((item) => {
+      if (item.date) {
+        const dateWithoutTimeZone = new Date(item.date).toLocaleString(
+          "en-US",
+          { timeZone: "Asia/Kolkata" }
+        );
+        item.date = dateWithoutTimeZone;
+      }
+    });
 
-//     res.render("templateMsgHistory", {
-//       ITEMS_PER_PAGE,
-//       totalDataInDb,
-//       items: allTemDetails,
-//       currentPage: parseInt(page),
-//       totalPages,
-//       sortField,
-//       sortOrder,
-//     });
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+    res.render("templateMsgHistory", {
+      ITEMS_PER_PAGE,
+      totalDataInDb,
+      items: allTemDetails,
+      currentPage: parseInt(page),
+      totalPages,
+      sortField,
+      sortOrder,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
-// router.get("/customMessage", auth, async (req, res) => {
-//   const showInSelectBox = await NumberModel.find({});
+router.get("/customMessage", auth, async (req, res) => {
+  const showInSelectBox = await NumberModel.find({});
 
-//   const categoriesSet = new Set();
-//   const mobileNumbers = [];
+  const categoriesSet = new Set();
+  const mobileNumbers = [];
 
-//   showInSelectBox.forEach(item => {
-//     categoriesSet.add(item.categories);
-//     mobileNumbers.push(item.mobile);
-//   });
-//   const categories = Array.from(categoriesSet);
-//   res.render("customMessage", { categories, mobileNumbers });
-// });
+  showInSelectBox.forEach(item => {
+    categoriesSet.add(item.categories);
+    mobileNumbers.push(item.mobile);
+  });
+  const categories = Array.from(categoriesSet);
+  res.render("customMessage", { categories, mobileNumbers });
+});
 
-// // custom message sending route
-// router.post("/sendCustomMessage", upload.single('extractExcel'), async (req, res) => {
-//   const sameBtnValue = req.body.sameBtn;
-//   const attachBtnValue = req.body.attachbtn;
-//   const phoneNumbers = req.body.mobileNumber;
-//   const getMsg = req.body.customMsgData;
-//   const allPhoneNumbers = phoneNumbers.split(',');
-//   console.log(`these are the phone numbers ${allPhoneNumbers}}`);
-//   if (sameBtnValue.includes("NumbersInput") && attachBtnValue === "imageSelected") {
-//     try {
-//       // Extract data from the request
-//       const mobileNumbers = req.body.mobileNumber.split(',');
-//       const captionss = req.body.customMsgData;
-//       // const imageLink = req.file ? req.file.path : req.body.uploadOnlyIMG;
-//       const imageLink = req.file ? req.file.path : (req.body.uploadOnlyIMG ? req.body.uploadOnlyIMG : undefined);
-
-
-//       // Prepare the message payload
-//       const messagePayload = {
-//         messaging_product: "whatsapp",
-//         recipient_type: "individual",
-//         to: mobileNumbers,
-//         type: "image",
-//         image: {
-//           link: imageLink,
-//           caption: captionss
-//         }
-//       };
-//       console.log('Request Payload:', messagePayload);
-
-//       // Make a request to the Facebook Graph API
-//       const response = await axios.post('https://graph.facebook.com/v17.0/116168451372633/messages/', messagePayload, {
-//         headers: {
-//           'Authorization': 'Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru', // Replace with your actual access token
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       // Handle the API response as needed
-//       console.log('API Response:', response.data);
-//       res.status(200).json({ success: true, message: 'Message sent successfully' });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ success: false, message: 'Error sending message' });
-//     }
-//   }
+// custom message sending route
+router.post("/sendCustomMessage", upload.single('extractExcel'), async (req, res) => {
+  const sameBtnValue = req.body.sameBtn;
+  const attachBtnValue = req.body.attachbtn;
+  const phoneNumbers = req.body.mobileNumber;
+  const getMsg = req.body.customMsgData;
+  const allPhoneNumbers = phoneNumbers.split(',');
+  console.log(`these are the phone numbers ${allPhoneNumbers}}`);
+  if (sameBtnValue.includes("NumbersInput") && attachBtnValue === "imageSelected") {
+    try {
+      // Extract data from the request
+      const mobileNumbers = req.body.mobileNumber.split(',');
+      const captionss = req.body.customMsgData;
+      // const imageLink = req.file ? req.file.path : req.body.uploadOnlyIMG;
+      const imageLink = req.file ? req.file.path : (req.body.uploadOnlyIMG ? req.body.uploadOnlyIMG : undefined);
 
 
-//   // dont do anything here this is working...
-//   else {
-//     for (const phoneNumber of allPhoneNumbers) {
-//       try {
-//         const response = await axios.post(
-//           'https://graph.facebook.com/v17.0/116168451372633/messages',
-//           {
-//             messaging_product: "whatsapp",
-//             recipient_type: "individual",
-//             to: phoneNumber.trim(), // Remove any leading/trailing whitespace
-//             type: "text",
-//             text: {
-//               body: `${getMsg}`
-//             },
-//           },
-//           {
-//             headers: {
-//               Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
-//               "Content-Type": "application/json",
-//             },
-//           }
-//         );
-//         // customMessageContent
-//         const savingCustomMessageInDB = new customMessageContent({
-//           mobileNumber: phoneNumbers,
-//           customMsgData: getMsg
-//         })
-//         await savingCustomMessageInDB.save();
-//         console.log(`this is the only message : ${response}`);
-//         console.log(`Message sent to ${phoneNumber}`);
-//         // console.log('message is saved in the database...');
-//       } catch (error) {
-//         console.error(`Error sending message to ${phoneNumber}: ${error.message}`);
-//       }
-//     }
-//   }
-// });
-// router.get("/customMsgHistory", auth, async (req, res) => {
-//   try {
-//     const customMessage = await customMessageContent.find({});
-//     res.render("customMsgHistory", { iterate: customMessage });
-//   } catch (error) {
-//     res.status(500).send("internal server Error");
-//   }
-// });
+      // Prepare the message payload
+      const messagePayload = {
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: mobileNumbers,
+        type: "image",
+        image: {
+          link: imageLink,
+          caption: captionss
+        }
+      };
+      console.log('Request Payload:', messagePayload);
+
+      // Make a request to the Facebook Graph API
+      const response = await axios.post('https://graph.facebook.com/v17.0/116168451372633/messages/', messagePayload, {
+        headers: {
+          'Authorization': 'Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru', // Replace with your actual access token
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Handle the API response as needed
+      console.log('API Response:', response.data);
+      res.status(200).json({ success: true, message: 'Message sent successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error sending message' });
+    }
+  }
+
+
+  // dont do anything here this is working...
+  else {
+    for (const phoneNumber of allPhoneNumbers) {
+      try {
+        const response = await axios.post(
+          'https://graph.facebook.com/v17.0/116168451372633/messages',
+          {
+            messaging_product: "whatsapp",
+            recipient_type: "individual",
+            to: phoneNumber.trim(), // Remove any leading/trailing whitespace
+            type: "text",
+            text: {
+              body: `${getMsg}`
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer EAAWqeZCMrJ6sBO7zUipLVLmnOdyF0ZBPcMyJC17gRmcZAZAnn3mMbRkvb19SFMiwvZCaIhuZAeB1C0QCrgfJK193Hav9kIDsKM5ZCvFAVkjgAkb57BOj2DWULJmEDvdxjpp01hpsznvZA7ZBVaO22QQdFjmfa0bggPndsH81BegAEgD8hSak3Pz8woVvPwLOMKAOnNLVEiDggLACVbaru`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        // customMessageContent
+        const savingCustomMessageInDB = new customMessageContent({
+          mobileNumber: phoneNumbers,
+          customMsgData: getMsg
+        })
+        await savingCustomMessageInDB.save();
+        console.log(`this is the only message : ${response}`);
+        console.log(`Message sent to ${phoneNumber}`);
+        // console.log('message is saved in the database...');
+      } catch (error) {
+        console.error(`Error sending message to ${phoneNumber}: ${error.message}`);
+      }
+    }
+  }
+});
+router.get("/customMsgHistory", auth, async (req, res) => {
+  try {
+    const customMessage = await customMessageContent.find({});
+    res.render("customMsgHistory", { iterate: customMessage });
+  } catch (error) {
+    res.status(500).send("internal server Error");
+  }
+});
 
 router.get("/viewAllTemplates", auth, (req, res) => {
   try {
