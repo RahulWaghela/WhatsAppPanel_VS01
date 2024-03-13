@@ -21,6 +21,16 @@
                           </span> dashboard
                         </h3>
                       </div>
+
+                      <nav>
+                        <ul>
+                            <% for (let breadcrumb of breadcrumbs) { %>
+                                <a href="<%= breadcrumb.url %>"><%= breadcrumb.label %> > </a>
+                            <% } %>
+                        </ul>
+                    </nav>
+
+
                       <div class="parentContainerOfAllBoxes">
 
                      

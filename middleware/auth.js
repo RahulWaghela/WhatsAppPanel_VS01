@@ -27,6 +27,21 @@ const auth = async (req, res, next) => {
     }
 }
 
+// middleware/breadcrumbs.js
 
+ const generateBreadcrumbs = (req, res, next) => {
+  // You can generate breadcrumbs based on the current URL or any other logic you prefer
+  // For demonstration, let's assume static breadcrumbs
+  const breadcrumbs = [
+      { text: 'Home', url: '/' },
+      { text: 'Contact', url: '/contact' }
+      // Add more breadcrumbs as needed
+  ];
 
+  // Add breadcrumbs to res.locals to make them available in views
+  res.locals.breadcrumbs = breadcrumbs;
+  next();
+};
+
+module.exports = generateBreadcrumbs;
 module.exports = auth;

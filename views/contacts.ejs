@@ -83,6 +83,7 @@
         border-radius: 4px;
         border: none;
         outline: none;
+        border: 1px solid black;
       }
       #contactsForm{
          width: 61rem;
@@ -101,6 +102,7 @@
         border-radius: 4px;
         border: none;
         outline: none;
+        border: 1px solid black;
       }
     </style>
 
@@ -117,10 +119,30 @@
                       <!-- <img src="/static/assets/images/home-gradient.png" alt="" style="width: 35px;"> -->
                     </span> Contacts List
                   </h3>
+
+                  
+                  
+                </div>
+                <nav>
+                  <ul>
+                      <% for (let breadcrumb of breadcrumbs) { %>
+                        <a href="<%= breadcrumb.url %>"><%= breadcrumb.label %></a> >
+                      <% } %>
+                  </ul>
+              </nav>
+                <div class="categoryManagement" style="display: flex;
+                flex-direction: row-reverse;">
+                  <a href="/category_management" id="categoryMNgBtn" class="button-12"
+                  style="text-decoration: none; width: 13rem; height: 30px; margin-top: 3px; position: relative;
+                  bottom: 38px; background-color: white; color: black;">category management</a>
+
                 </div>
                 <!-- add custom code here -->
                 <div class="uploadFile">
-                  <form action="/uploadingFile" method="post" style="width: 73%; display: flex;"
+                  <form action="/uploadingFile" method="post" style="    width: 73%;
+                  display: flex;
+                  position: relative;
+                  bottom: 26px;"
                     enctype="multipart/form-data" onsubmit="return validateForm()">
                     <div class="mb-3" style="width: 15rem;">
                       <label for="fileID" class="contactUpload" id="showFileName">
@@ -132,19 +154,34 @@
                     <div class="buttons" style="margin-left: -78px;
                     padding: 3px;">
                       <button type="submit" class="button-12" id="uploadContactsButtons" style="background-color: white; color: black;">Upload</button>
-                      <p style="text-align: center; background: red;color: white;width: 60%;margin: auto;   border-radius: 3px;"
+                      <p style="text-align: center; background:  red;color: white;width: 179%;margin: auto;   border-radius: 3px; position: relative;
+                      top: 16px;
+                      right: 129px;"
                         id="cetegoryErrorMsg"></p>
-                    </div>
+                    </div>  
+                      <!-- start from here  -->
                   </form>
                   <!-- test -->
-                  <form action="/addcontacts" method="post" id="contactsForm">
-                    <input type="text" name="addName" id="addName" placeholder="Add Name">
-                    <input type="text" name="addcontacts" id="addcontacts" placeholder="Add Contacts">
-                    <button type="submit" id="contactBTN">Add</button>
-                  </form>
+                  <div class="singalContactForm" style="border: 1px solid black;
+                  width: 37rem;
+                  display: flex;
+                  position: relative;
+                  bottom: 27px;
+                  height: 51px;background: #e1e1e1;
+                  border-radius: 4px;">
+                    <form action="/addcontacts" method="post" id="contactsForm">
+                      <div class="shitRight" style="width: 34rem;
+                      margin-left: 54px; margin-top: 7px;">
+                        <label for="">Single Number:</label>
+                        <input type="text" name="addName" id="addName" placeholder="Add Name">
+                        <input type="text" name="addcontacts" id="addcontacts" placeholder="Add Mobile Number">
+                        <button type="submit" id="contactBTN">Add</button>
+                      </div>
+                    </form>
+                  </div>
+              
                   <!-- test -->
-                  <a href="/category_management" id="categoryMNgBtn" class="button-12"
-                    style="text-decoration: none; width: 33rem; height: 30px; margin-top: 3px; background-color: white; color: black;">category management</a>
+                  
                 </div>
                 <div class="row">
                   <!-- <div class="categoryErrorMessage" style="display: flex; justify-content: center;align-items: center;"> -->
@@ -213,7 +250,7 @@
                               onsubmit="assignCategoryToSelected();return validateCheckboxSelection();">
                               <!-- <label for="category">Select a Category:</label> -->
                               <select name="category" id="category">
-                                <option value="">Select Categories</option>
+                                <option value="">Select contact to assign caetgory</option>
                                 <% categoryNames.forEach(categoryName=> { %>
                                   <option value="<%= categoryName %>">
                                     <%= categoryName %>
@@ -410,9 +447,6 @@
           modal.style.display = 'none';
         }
       };
-
-
-
       function openModal() {
         const modal = document.getElementById("editModal");
         modal.style.display = "block";
@@ -425,7 +459,7 @@
     </script>
     <!-- ramji code -->
 
-    <script>
+    <script> 
       function validateCheckboxSelection() {
         // Get all the checkbox elements by their name attribute
         const checkboxes = document.querySelectorAll('input[name="selectedUsers"]');

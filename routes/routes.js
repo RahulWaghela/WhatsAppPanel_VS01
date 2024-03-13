@@ -25,6 +25,9 @@ const {
   campaignHistory
 } = require("../model/schema");
 
+const breadcrumbMiddleware = require('../middleware/breadcrumbs');
+app.use(breadcrumbMiddleware);
+
 
 // Define a sample route
 router.get("/api/savetemplateentry/:param1/:param2", async (req, res) => {
@@ -40,10 +43,14 @@ router.get("/api/savetemplateentry/:param1/:param2", async (req, res) => {
   res.json(responseData);
 });
 
+ 
+
 router.get("/", (req, res) => {
+//   const breadcrumbs = [
+//     { label: "dashboard",url:'/getLogindata'},
+// ];
   res.render("login");
 });
-
 router.get("/Register", (req, res) => {
   res.render("Register");
 });
@@ -456,10 +463,14 @@ router.post("/update/:id", async (req, res) => {
 // Edit and Delete API's
 router.get("/getLogindata", auth, async (req, res) => {
   try {
+    const breadcrumbs = [
+      { label: "dashboard",url:'/getLogindata'},
+  ];
+
     const countDetails = await templateMsg.find({}).count();
     const countDetailsOFCustomMsg = await customMessageContent.find({}).count();
     const contDetailOfCampaign = await campaignHistory.find({}).count();
-    res.render("index", { countDetails, countDetailsOFCustomMsg, contDetailOfCampaign });
+    res.render("index", { countDetails, countDetailsOFCustomMsg, contDetailOfCampaign ,breadcrumbs: breadcrumbs});
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
@@ -608,6 +619,13 @@ router.get('/category_management/delete/:id', async (req, res) => {
 
 router.get("/contacts", auth, async (req, res) => {
   try {
+
+    const breadcrumbs = [
+      { label: "dashboard",url:'/getLogindata'},
+      { label: 'Contacts List', url: '/contacts' }
+  ];
+
+
     const categories = await categoryManage.find();
     const categoryNames = categories.map(category => category.categoryName);
     // console.log(categoryNames);
@@ -655,6 +673,7 @@ router.get("/contacts", auth, async (req, res) => {
       CountTotalNumbers,
       categoryNames, // Add categoryNames here if it's defined in your route handler.
       updatedCategory: req.query.updatedCategory, // Pass the updated category to the view
+      breadcrumbs: breadcrumbs
     });
 
   } catch (error) {
@@ -683,10 +702,19 @@ router.post('/updateCategories', async (req, res) => {
 
 router.get("/campaigns", auth, async (req, res) => {
   try {
+
+    const breadcrumbs = [
+
+      { label: "dashboard",url:'/getLogindata'},
+      { label: 'Contacts List', url: '/contacts' },
+      { label: "campaign",url:'/campaigns'}
+  ];
+
+
     const campaignhistory = await campaignHistory.find({});
     const campaigns = await campaignsSchema.find({});
 
-    res.render('campaigns', { campaigns, campaignhistory });
+    res.render('campaigns', { campaigns, campaignhistory ,breadcrumbs: breadcrumbs});
   } catch (error) {
     console.log(error);
   }
@@ -786,7 +814,9 @@ router.post('/SentMessagetothisCampaign', upload.single('extractExcel'),auth, as
     
     console.log(`see APIlink ${APILink} and see BearerToken ${BearerToken}`);  
 
-    const phoneNumbersInput = req.body.MobileNumberswithComma
+    const phoneNumbersInput = req.body.MobileNumberswithComma;
+    const degree= req.body.mobile;
+ 
     const showthisAnimation = "Sending...";
     // Check which radio button is selected
     const selectedOption = req.body.sameName;
