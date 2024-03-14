@@ -106,7 +106,7 @@ router.post('/sendtemplateMessages', upload.single('extractExcel'), auth, async 
             },
           }
         );
-
+ 
         const savingTemplateMessageInDB = new templateMsg({
           phoneOfTemp: phoneNumbers,
           selectTemp: messageContent
@@ -119,8 +119,10 @@ router.post('/sendtemplateMessages', upload.single('extractExcel'), auth, async 
         // console.error(`Error sending message to ${phoneNumber}:`, error.response?.status, error.response?.data);
         console.log(`See here phone numbers ${phoneNumbers}`)
         console.log(`See here selected template name ${messageContent}`);
+          console.log(`${messageContent}`); 
+            console.log('now check here this is th')
         console.log(`See here Error ${error}`);
-      }
+      } 
     }
     console.log('Mobile Number is checked');
   }
